@@ -1,0 +1,31 @@
+# Ignore secret files and directories
+.env
+*.secret
+
+# Ignore database files
+*.sqlite3
+
+# Ignore generated files
+*.pyc
+__pycache__/
+
+# Ignore development tools
+.vscode/
+*.idea/
+
+# Ignore deployment-specific files
+*.conf
+*.ini
+
+# Ignore log files
+*.log
+
+# Ignore cache files
+*.cache
+
+# Ignore temporary files
+*.swp
+.DS_Store
+
+# Ignore venv file
+venv/

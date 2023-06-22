@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Horoscope Input Form
+{% endblock %}
+
+{% block content %}
+    <div id="input-div">
+        <form method="post" id="input-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+{% endblock %}
+
+{% block jscontent %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let monthField = $("#id_month");
+            let dayField = $("#id_day");
+            let yearField = $("#id_year");
+
+            function updateDayOptions() {
+                let selectedMonth = parseInt(monthField.val(), 10);
+                let selectedDay = parseInt(dayField.val(), 10);
+                
+                let daysInMonth = new Date(yearField.val(), selectedMonth, 0).getDate();
+
+                dayField.find("option").each(function() {
+                    let dayOption = $(this);
+                    let dayValue = parseInt(dayOption.val(), 10);
+
+                    if (dayValue > daysInMonth) {
+                        dayOption.attr("disabled", true);
+                    } else {
+                        dayOption.attr("disabled", false);
+                    }
+                });
+
+                if (selectedDay > daysInMonth) {
+                    dayField.val("");
+                }
+            }
+
+            // Bind the function to the change event
+            monthField.change(updateDayOptions);
+            yearField.change(updateDayOptions);
+
+            updateDayOptions();
+        });
+    </script>
+{% endblock %}
