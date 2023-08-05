@@ -6,17 +6,17 @@ from core.tuvi.elements.nguhanh import NguHanh
 
 class Color(Enum):
     RED = (255, 0, 0)
-    GREEN = (29, 110, 22)
+    GREEN = (28, 128, 19)
     BLUE = (0, 0, 255)
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     BACKGROUND = (250, 241, 215)
-    YELLOW = (237, 175, 19)
-    GREY = (184, 183, 173)
+    YELLOW = (209, 206, 15)
+    GREY = (145, 144, 134)
 
 
 class FontSize(Enum):
-    SMALL = 10
+    SMALL = 11
     MEDIUM = 12
     LARGE = 14
 

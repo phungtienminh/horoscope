@@ -16,10 +16,28 @@ from typing import Union, List
 from PIL import Image, ImageDraw, ImageFont
 import io
 import base64
+from datetime import datetime, timedelta
 
 
 class LaSoTuVi:
     def __init__(self, year: int, month: int, day: int, hour: int, minute: int, second: int = 0, gender: Union[int, None] = GioiTinh.NONE.value, cur_year: int = 2023, hoten: str = 'Tử vi Tiến Minh') -> None:
+        self.old_year = year
+        self.old_month = month
+        self.old_day = day
+        self.old_hour = hour
+        self.old_minute = minute
+
+        if hour >= 23:
+            current_date = datetime(year, month, day)
+            next_date = current_date + timedelta(days=1)
+
+            year = next_date.year
+            month = next_date.month
+            day = next_date.day
+            hour = 0
+            minute = 0
+
+
         self.birthdate: SolarDate = SolarDate(year, month, day, hour, minute, second)
         self.gender: int = gender
         self.cur_year: int = cur_year
@@ -79,7 +97,7 @@ class LaSoTuVi:
 
         self.diaban[vi_tri_menh - 1].name = 'MỆNH'
         self.diaban[vi_tri_phu_mau - 1].name = 'PHỤ MẪU'
-        self.diaban[vi_tri_phuc_duc - 1].name = 'PHÚC ĐỨC'
+        self.diaban[vi_tri_phuc_duc - 1].name = 'PHÚC'
         self.diaban[vi_tri_dien_trach - 1].name = 'ĐIỀN TRẠCH'
         self.diaban[vi_tri_quan_loc - 1].name = 'QUAN LỘC'
         self.diaban[vi_tri_no_boc - 1].name = 'NÔ BỘC'
@@ -217,7 +235,8 @@ class LaSoTuVi:
         font_large_bold = ImageFont.truetype('Arial Bold.ttf', FontSize.LARGE.value)
 
         # Cell width and height
-        cell_width, cell_height = 200, 200
+        cell_size = 200
+        cell_width, cell_height = cell_size, cell_size
 
         # Start drawing
         ##### VE DIA BAN #####
@@ -230,19 +249,22 @@ class LaSoTuVi:
             draw.line([topleft_cell, (topleft_cell[0], topleft_cell[1] + cell_height)], fill=Color.BLACK.value, width=2)
             draw.line([(topleft_cell[0] + cell_width, topleft_cell[1]), (topleft_cell[0] + cell_width, topleft_cell[1] + cell_height)], fill=Color.BLACK.value, width=2)
             draw.line([(topleft_cell[0], topleft_cell[1] + cell_height), (topleft_cell[0] + cell_width, topleft_cell[1] + cell_height)], fill=Color.BLACK.value, width=2)
+            if i == 0:
+                draw.line([(cell_width * 4 - 2, 0), (cell_width * 4 - 2, cell_height * 4 - 2)], fill=Color.BLACK.value, width=2)
+                draw.line([(0, cell_height * 4 - 2), (cell_width * 4 - 2, cell_height * 4 - 2)], fill=Color.BLACK.value, width=2)
 
             # Draw 4 corners
             # Upper left
             draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=5, height_percent=5), self.diaban[i].zodiac, fill=get_color(self.diaban[i].ID), font=font_small_bold)
 
             # Upper right
-            draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=85, height_percent=5), str(self.diaban[i].dai_han), fill=Color.BLACK.value, font=font_small_bold)
+            draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=90, height_percent=5), str(self.diaban[i].dai_han), fill=Color.BLACK.value, font=font_small_bold)
             
             # Lower left
             draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=5, height_percent=90), self.diaban[i].tieu_han, fill=Color.BLACK.value, font=font_small)
 
             # Lower right
-            draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=78, height_percent=90), self.diaban[i].nguyet_han, fill=Color.BLACK.value, font=font_small)
+            draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=75, height_percent=90), self.diaban[i].nguyet_han, fill=Color.BLACK.value, font=font_small)
 
             # Draw name and bottom star
             # Name
@@ -270,9 +292,9 @@ class LaSoTuVi:
                     cur_name += f'({star.trang_thai.value})'
 
                 if star.is_print_bold:
-                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=5, height_percent=30 + 5 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small_bold)
+                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=5, height_percent=30 + 6 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small_bold)
                 else:
-                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=5, height_percent=30 + 5 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small)
+                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=5, height_percent=30 + 6 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small)
             
             # Ve phu tinh phai
             for j, star in enumerate(self.diaban[i].phu_tinh_phai):
@@ -281,9 +303,9 @@ class LaSoTuVi:
                     cur_name += f'({star.trang_thai.value})'
 
                 if star.is_print_bold:
-                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=50, height_percent=30 + 5 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small_bold)
+                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=50, height_percent=30 + 6 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small_bold)
                 else:
-                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=50, height_percent=30 + 5 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small)
+                    draw.text(get_position(topleft_cell, (cell_width, cell_height), width_percent=50, height_percent=30 + 6 * j), cur_name, fill=get_color_by_nguhanh(star.ngu_hanh.value), font=font_small)
 
         # Ve Tuan, Triet
         if self.vi_tri_tuan == self.vi_tri_triet:
@@ -326,7 +348,7 @@ class LaSoTuVi:
             draw.rectangle((*topleft_box_coor, center_box_coor[0] + box_width // 2, center_box_coor[1] + box_height // 2), fill=Color.BLACK.value)
             
             text_width, text_height = draw.textsize('Triệt', font=font_small_bold)
-            draw.text((center_box_coor[0] - text_width // 2, center_box_coor[1] - text_height // 2 - 2), 'Triệt', fill=Color.WHITE.value, font=font_small_bold)
+            draw.text((center_box_coor[0] - text_width // 2, center_box_coor[1] - text_height // 2), 'Triệt', fill=Color.WHITE.value, font=font_small_bold)
 
             # Ve Tuan
             if self.vi_tri_tuan == 1:
@@ -348,7 +370,7 @@ class LaSoTuVi:
             draw.rectangle((*topleft_box_coor, center_box_coor[0] + box_width // 2, center_box_coor[1] + box_height // 2), fill=Color.BLACK.value)
             
             text_width, text_height = draw.textsize('Tuần', font=font_small_bold)
-            draw.text((center_box_coor[0] - text_width // 2, center_box_coor[1] - text_height // 2 - 2), 'Tuần', fill=Color.WHITE.value, font=font_small_bold)
+            draw.text((center_box_coor[0] - text_width // 2, center_box_coor[1] - text_height // 2), 'Tuần', fill=Color.WHITE.value, font=font_small_bold)
         ##### VE DIA BAN #####
 
         ##### VE THIEN BAN #####
@@ -365,22 +387,22 @@ class LaSoTuVi:
         lunar_date = DateUtil.solar_to_lunar(self.birthdate.empty_hms())
         # Nam
         draw.text(get_position((0, 0), (width, height), width_percent=31.25, height_percent=38), 'Năm:', fill=Color.BLACK.value, font=font_small_bold)
-        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=38), str(self.birthdate.year), fill=Color.BLUE.value, font=font_small)
+        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=38), str(self.old_year), fill=Color.BLUE.value, font=font_small)
         draw.text(get_position((0, 0), (width, height), width_percent=60, height_percent=38), ZodiacUtil.zodiac_year(lunar_date), fill=Color.BLUE.value, font=font_small)
         
         # Thang
         draw.text(get_position((0, 0), (width, height), width_percent=31.25, height_percent=40), 'Tháng:', fill=Color.BLACK.value, font=font_small_bold)
-        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=40), f'{str(self.birthdate.month).zfill(2)} ({str(lunar_date.month).zfill(2)})', fill=Color.BLUE.value, font=font_small)
+        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=40), f'{str(self.old_month).zfill(2)} ({str(lunar_date.month).zfill(2)})', fill=Color.BLUE.value, font=font_small)
         draw.text(get_position((0, 0), (width, height), width_percent=60, height_percent=40), ZodiacUtil.zodiac_month(lunar_date), fill=Color.BLUE.value, font=font_small)
         
         # Ngay
         draw.text(get_position((0, 0), (width, height), width_percent=31.25, height_percent=42), 'Ngày:', fill=Color.BLACK.value, font=font_small_bold)
-        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=42), f'{str(self.birthdate.day).zfill(2)} ({str(lunar_date.day).zfill(2)})', fill=Color.BLUE.value, font=font_small)
+        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=42), f'{str(self.old_day).zfill(2)} ({str(lunar_date.day).zfill(2)})', fill=Color.BLUE.value, font=font_small)
         draw.text(get_position((0, 0), (width, height), width_percent=60, height_percent=42), ZodiacUtil.zodiac_day(self.birthdate), fill=Color.BLUE.value, font=font_small)
         
         # Gio
         draw.text(get_position((0, 0), (width, height), width_percent=31.25, height_percent=44), 'Giờ:', fill=Color.BLACK.value, font=font_small_bold)
-        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=44), f'{str(self.birthdate.hour).zfill(2)} giờ {str(self.birthdate.minute).zfill(2)} phút', fill=Color.BLUE.value, font=font_small)
+        draw.text(get_position((0, 0), (width, height), width_percent=43.75, height_percent=44), f'{str(self.old_hour).zfill(2)} giờ {str(self.old_minute).zfill(2)} phút', fill=Color.BLUE.value, font=font_small)
         draw.text(get_position((0, 0), (width, height), width_percent=60, height_percent=44), ZodiacUtil.zodiac_hour(self.birthdate), fill=Color.BLUE.value, font=font_small)
         
         # Nam xem

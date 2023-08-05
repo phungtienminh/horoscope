@@ -167,10 +167,10 @@ class SaoTuVi(Sao):
             if day in [2, 12, 15, 21]:
                 SaoTuVi.trang_thai = TrangThai.VUONG
                 return 5
-            if day in [19, 25]:
+            if day in [6, 16, 19, 25]:
                 SaoTuVi.trang_thai = TrangThai.MIEU
                 return 6
-            if day in [23, 29]:
+            if day in [10, 20, 23, 29]:
                 SaoTuVi.trang_thai = TrangThai.MIEU
                 return 7
             if day in [14, 24, 27]:
@@ -209,7 +209,7 @@ class SaoTuVi(Sao):
             if day in [8, 20, 24]:
                 SaoTuVi.trang_thai = TrangThai.MIEU
                 return 6
-            if day in [25, 29]:
+            if day in [1, 13, 25, 29]:
                 SaoTuVi.trang_thai = TrangThai.MIEU
                 return 7
             if day in [6, 18, 30]:
@@ -1079,7 +1079,13 @@ class SaoThienMa(Sao):
             12: 6
         }
 
-        return temp_dict.get(chi_nam)
+        vi_tri_thien_ma = temp_dict.get(chi_nam)
+        if vi_tri_thien_ma in [3, 6]:
+            SaoThienMa.trang_thai = TrangThai.DAC
+        elif vi_tri_thien_ma in [9, 12]:
+            SaoThienMa.trang_thai = TrangThai.HAM
+
+        return vi_tri_thien_ma
 
 
 class SaoHoaTinh(Sao):

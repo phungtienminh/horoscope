@@ -5,19 +5,28 @@
 {% endblock %}
 
 {% block content %}
+    <h1 class="text-center mb-5 mt-2">Horoscope App</h1>
     <div id="input-div">
+        <br>
         <form method="post" id="input-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="btn btn-block btn-primary">
         </form>
     </div>
 {% endblock %}
 
 {% block jscontent %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            /* Decorate with bootstrap */
+            $("#id_name").addClass("form-control");
+            $("#id_name").attr("placeholder", "Name");
+
+            /* End of decorate */
+
+
             let monthField = $("#id_month");
             let dayField = $("#id_day");
             let yearField = $("#id_year");
