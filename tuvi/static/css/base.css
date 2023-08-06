@@ -15,3 +15,9 @@ img {
     left: 50%;
     transform: translate(-50%, 0);
 }
+
+@media (max-width: 1024px) and (max-device-width: 1024px) and (orientation: portrait) {
+    img {
+        scale: 0.5;
+    }
+}
