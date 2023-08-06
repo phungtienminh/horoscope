@@ -14,10 +14,13 @@ img {
     top: 0;
     left: 50%;
     transform: translate(-50%, 0);
+    scale: 0.5;
 }
 
+/*
 @media screen and (max-width: 1024px) {
     img {
         scale: 0.5;
     }
 }
+*/
