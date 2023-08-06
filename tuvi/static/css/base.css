@@ -16,7 +16,7 @@ img {
     transform: translate(-50%, 0);
 }
 
-@media (max-width: 1440px) and (max-device-width: 1440px) and (orientation: portrait) {
+@media screen and (max-width: 1024px) {
     img {
         scale: 0.5;
     }
