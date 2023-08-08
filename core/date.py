@@ -141,6 +141,10 @@ class Date(DateMixin):
         return f'{self.get_month_name(self.month)} {self.get_ordinal(self.day)}, {self.year} {str(self.hour).zfill(2)}:{str(self.minute).zfill(2)}:{str(self.second).zfill(2)}'
     
 
+    def __hash__(self):
+        return hash((self.year, self.month, self.day, self.hour, self.minute, self.second))
+
+
 class SolarDate(Date):
     """
     Class for solar date, a subclass of Date.
