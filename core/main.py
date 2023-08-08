@@ -227,12 +227,14 @@ class LaSoTuVi:
         draw = ImageDraw.Draw(image)
 
         # Create fonts
-        font_small = ImageFont.truetype('Arial.ttf', FontSize.SMALL.value)
-        font_medium = ImageFont.truetype('Arial.ttf', FontSize.MEDIUM.value)
-        font_large = ImageFont.truetype('Arial.ttf', FontSize.LARGE.value)
-        font_small_bold = ImageFont.truetype('Arial Bold.ttf', FontSize.SMALL.value)
-        font_medium_bold = ImageFont.truetype('Arial Bold.ttf', FontSize.MEDIUM.value)
-        font_large_bold = ImageFont.truetype('Arial Bold.ttf', FontSize.LARGE.value)
+        font_path = 'fonts/Arial.ttf'
+        bold_font_path = 'fonts/Arial Bold.ttf'
+        font_small = ImageFont.truetype(font_path, FontSize.SMALL.value)
+        font_medium = ImageFont.truetype(font_path, FontSize.MEDIUM.value)
+        font_large = ImageFont.truetype(font_path, FontSize.LARGE.value)
+        font_small_bold = ImageFont.truetype(bold_font_path, FontSize.SMALL.value)
+        font_medium_bold = ImageFont.truetype(bold_font_path, FontSize.MEDIUM.value)
+        font_large_bold = ImageFont.truetype(bold_font_path, FontSize.LARGE.value)
 
         # Cell width and height
         cell_size = 200
