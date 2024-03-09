@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, Union, List
 from functools import lru_cache
+from datetime import datetime
 
 from core.date import Date, LunarDate, SolarDate
 from core.tuvi.elements.amduong import AmDuong
@@ -31,7 +32,7 @@ class Sao(ABC):
     @staticmethod
     @abstractmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         """
         Given date of birth `birthdate` and generated year `cur_year`, return the position of this star
         as the ID of cell which contains the star.
@@ -70,7 +71,7 @@ class SaoTuVi(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         cuc = TuViUtil.tim_cuc(birthdate)
         day = lunar_date.day
@@ -287,7 +288,7 @@ class SaoThienCo(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_tu_vi = SaoTuVi.an_sao(birthdate, cur_year)
         vi_tri_thien_co = (vi_tri_tu_vi - 2 + 12) % 12 + 1
         
@@ -317,7 +318,7 @@ class SaoThaiDuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_co = SaoThienCo.an_sao(birthdate, cur_year)
         vi_tri_thai_duong = (vi_tri_thien_co - 3 + 12) % 12 + 1
         
@@ -347,7 +348,7 @@ class SaoVuKhuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thai_duong = SaoThaiDuong.an_sao(birthdate, cur_year)
         vi_tri_vu_khuc = (vi_tri_thai_duong - 2 + 12) % 12 + 1
 
@@ -377,7 +378,7 @@ class SaoThienDong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_vu_khuc = SaoVuKhuc.an_sao(birthdate, cur_year)
         vi_tri_thien_dong = (vi_tri_vu_khuc - 2 + 12) % 12 + 1
 
@@ -407,7 +408,7 @@ class SaoLiemTrinh(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_dong = SaoThienDong.an_sao(birthdate, cur_year)
         vi_tri_liem_trinh = (vi_tri_thien_dong - 4 + 12) % 12 + 1
 
@@ -437,7 +438,7 @@ class SaoThienPhu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_tu_vi = SaoTuVi.an_sao(birthdate, cur_year)
         temp_dict = {
             1: 5,
@@ -481,7 +482,7 @@ class SaoThaiAm(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_phu = SaoThienPhu.an_sao(birthdate, cur_year)
         vi_tri_thai_am = vi_tri_thien_phu % 12 + 1
 
@@ -511,7 +512,7 @@ class SaoThamLang(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thai_am = SaoThaiAm.an_sao(birthdate, cur_year)
         vi_tri_tham_lang = vi_tri_thai_am % 12 + 1
         
@@ -541,7 +542,7 @@ class SaoCuMon(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_tham_lang = SaoThamLang.an_sao(birthdate, cur_year)
         vi_tri_cu_mon = vi_tri_tham_lang % 12 + 1
 
@@ -571,7 +572,7 @@ class SaoThienTuong(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_cu_mon = SaoCuMon.an_sao(birthdate, cur_year)
         vi_tri_thien_tuong = vi_tri_cu_mon % 12 + 1
 
@@ -601,7 +602,7 @@ class SaoThienLuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_tuong = SaoThienTuong.an_sao(birthdate, cur_year)
         vi_tri_thien_luong = vi_tri_thien_tuong % 12 + 1
 
@@ -631,7 +632,7 @@ class SaoThatSat(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_luong = SaoThienLuong.an_sao(birthdate, cur_year)
         vi_tri_that_sat = vi_tri_thien_luong % 12 + 1
 
@@ -661,7 +662,7 @@ class SaoPhaQuan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_that_sat = SaoThatSat.an_sao(birthdate, cur_year)
         vi_tri_pha_quan = (vi_tri_that_sat + 3) % 12 + 1
 
@@ -691,7 +692,7 @@ class SaoThienViet(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -723,7 +724,7 @@ class SaoHoaKhoa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -767,7 +768,7 @@ class SaoTaPhu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_ta_phu = (4 + lunar_date.month - 1) % 12 + 1
         return vi_tri_ta_phu
@@ -785,7 +786,7 @@ class SaoPhiLiem(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -808,7 +809,7 @@ class SaoTrucPhu(Sao):
  
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_dieu_khach = SaoDieuKhach.an_sao(birthdate, cur_year, gender)
         return vi_tri_dieu_khach % 12 + 1
 
@@ -825,7 +826,7 @@ class SaoPhaToai(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -859,7 +860,7 @@ class SaoHiThan(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -882,7 +883,7 @@ class SaoThienPhuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -914,7 +915,7 @@ class SaoDiaKiep(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         vi_tri_dia_kiep = (11 + zodiac_hour_tuple[1] - 1) % 12 + 1
 
@@ -940,7 +941,7 @@ class SaoThaiTue(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         return chi_nam
@@ -958,7 +959,7 @@ class SaoHoaLoc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -1002,7 +1003,7 @@ class SaoQuocAn(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_loc_ton = SaoLocTon.an_sao(birthdate, cur_year, gender)
         return (vi_tri_loc_ton - 1 + 8) % 12 + 1
 
@@ -1019,7 +1020,7 @@ class SaoThieuDuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thai_tue = SaoThaiTue.an_sao(birthdate, cur_year, gender)
         return vi_tri_thai_tue % 12 + 1
 
@@ -1036,7 +1037,7 @@ class SaoThienKhong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return SaoThieuDuong.an_sao(birthdate, cur_year, gender)
 
 
@@ -1052,7 +1053,7 @@ class SaoBenhPhu(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -1075,7 +1076,7 @@ class SaoDiaGiai(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_dia_giai = (7 + lunar_date.month - 1) % 12 + 1
         return vi_tri_dia_giai
@@ -1093,7 +1094,7 @@ class SaoThienMa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -1133,7 +1134,7 @@ class SaoHoaTinh(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         zodiac_year_tuple = ZodiacUtil.zodiac_year_tuple(lunar_date)
@@ -1178,7 +1179,7 @@ class SaoLinhTinh(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         zodiac_year_tuple = ZodiacUtil.zodiac_year_tuple(lunar_date)
@@ -1219,7 +1220,7 @@ class SaoCoThan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -1253,7 +1254,7 @@ class SaoDaiHao(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -1285,7 +1286,7 @@ class SaoTangMon(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thieu_duong = SaoThieuDuong.an_sao(birthdate, cur_year, gender)
         vi_tri_tang_mon = vi_tri_thieu_duong % 12 + 1
 
@@ -1311,7 +1312,7 @@ class SaoThienQuy(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_van_khuc = SaoVanKhuc.an_sao(birthdate, cur_year, gender)
         vi_tri_thien_quy = (vi_tri_van_khuc - 1 - (lunar_date.day - 2) + 12 * 12) % 12 + 1
@@ -1330,7 +1331,7 @@ class SaoTauThu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -1353,7 +1354,7 @@ class SaoDuongPhu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_loc_ton = SaoLocTon.an_sao(birthdate, cur_year, gender)
         return (vi_tri_loc_ton - 1 + 5) % 12 + 1
 
@@ -1370,7 +1371,7 @@ class SaoThienTho(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         vi_tri_cung_than = TuViUtil.tim_vi_tri_than(birthdate)
@@ -1389,7 +1390,7 @@ class SaoGiaiThan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return SaoPhuongCac.an_sao(birthdate, cur_year, gender)
     
 
@@ -1405,7 +1406,7 @@ class SaoPhuongCac(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         return (10 - (chi_nam - 1) + 12) % 12 + 1
@@ -1423,7 +1424,7 @@ class SaoDiaKhong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         vi_tri_dia_khong = (11 - (zodiac_hour_tuple[1] - 1) + 12) % 12 + 1
 
@@ -1449,7 +1450,7 @@ class SaoQuaTu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -1483,7 +1484,7 @@ class SaoDieuKhach(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_phuc_duc = SaoPhucDuc.an_sao(birthdate, cur_year, gender)
         return vi_tri_phuc_duc % 12 + 1
 
@@ -1500,7 +1501,7 @@ class SaoThienLa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return 5
 
 
@@ -1516,7 +1517,7 @@ class SaoHuuBat(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_huu_bat = (10 - (lunar_date.month - 1) + 12) % 12 + 1
         return vi_tri_huu_bat
@@ -1534,7 +1535,7 @@ class SaoHongLoan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         return (3 - (chi_nam - 1) + 12) % 12 + 1
@@ -1552,7 +1553,7 @@ class SaoThienGiai(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_thien_giai = (8 + lunar_date.month - 1) % 12 + 1
         return vi_tri_thien_giai
@@ -1570,7 +1571,7 @@ class SaoPhongCao(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         vi_tri_phong_cao = (2 + zodiac_hour_tuple[1] - 1) % 12 + 1
         return vi_tri_phong_cao
@@ -1588,7 +1589,7 @@ class SaoThienTru(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -1620,7 +1621,7 @@ class SaoThieuAm(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_tang_mon = SaoTangMon.an_sao(birthdate, cur_year, gender)
         return vi_tri_tang_mon % 12 + 1
 
@@ -1637,7 +1638,7 @@ class SaoPhucBinh(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -1660,7 +1661,7 @@ class SaoVanXuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         vi_tri_van_xuong = (10 - (zodiac_hour_tuple[1] - 1) + 12) % 12 + 1
         
@@ -1686,7 +1687,7 @@ class SaoThienKhoi(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -1718,7 +1719,7 @@ class SaoThienHy(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         return (9 - (chi_nam - 1) + 12) % 12 + 1
@@ -1736,7 +1737,7 @@ class SaoDaoHoa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -1770,7 +1771,7 @@ class SaoPhucDuc(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_bach_ho = SaoBachHo.an_sao(birthdate, cur_year, gender)
         return vi_tri_bach_ho % 12 + 1
 
@@ -1787,7 +1788,7 @@ class SaoThienDuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return SaoPhucDuc.an_sao(birthdate, cur_year, gender)
 
 
@@ -1803,7 +1804,7 @@ class SaoTuongQuan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -1826,7 +1827,7 @@ class SaoThienSu(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return TuViUtil.tim_cung_tat_ach(birthdate)
 
 
@@ -1842,7 +1843,7 @@ class SaoAnQuang(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_van_xuong = SaoVanXuong.an_sao(birthdate, cur_year, gender)
         vi_tri_an_quang = (vi_tri_van_xuong - 1 + (lunar_date.day - 2) + 12 * 12) % 12 + 1
@@ -1861,7 +1862,7 @@ class SaoThienQuan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -1893,7 +1894,7 @@ class SaoHoaCai(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -1927,7 +1928,7 @@ class SaoLongTri(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return SaoQuanPhuf.an_sao(birthdate, cur_year, gender)
 
 
@@ -1943,7 +1944,7 @@ class SaoDaLa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_loc_ton = SaoLocTon.an_sao(birthdate, cur_year, gender)
         vi_tri_da_la = (vi_tri_loc_ton - 2 + 12) % 12 + 1
 
@@ -1969,7 +1970,7 @@ class SaoHoaKy(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -2009,7 +2010,7 @@ class SaoThienHinh(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_thien_hinh = (9 + lunar_date.month - 1) % 12 + 1
 
@@ -2035,7 +2036,7 @@ class SaoQuanPhur(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2058,7 +2059,7 @@ class SaoQuanPhuf(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thieu_am = SaoThieuAm.an_sao(birthdate, cur_year, gender)
         return vi_tri_thieu_am % 12 + 1
 
@@ -2075,7 +2076,7 @@ class SaoDiaVong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return 11
 
 
@@ -2091,7 +2092,7 @@ class SaoHoaQuyen(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -2135,7 +2136,7 @@ class SaoThienY(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_thien_y = (1 + lunar_date.month - 1) % 12 + 1
 
@@ -2161,7 +2162,7 @@ class SaoLNVanTinh(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_loc_ton = SaoLocTon.an_sao(birthdate, cur_year, gender)
         return (vi_tri_loc_ton - 1 + 3) % 12 + 1
 
@@ -2178,7 +2179,7 @@ class SaoThienTai(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         vi_tri_cung_menh = TuViUtil.tim_vi_tri_menh(birthdate)
@@ -2197,7 +2198,7 @@ class SaoThienDieu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_dieu = SaoThienY.an_sao(birthdate, cur_year)
         SaoThienDieu.trang_thai = SaoThienY.trang_thai
         return vi_tri_thien_dieu
@@ -2215,7 +2216,7 @@ class SaoTieuHao(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2247,7 +2248,7 @@ class SaoBachHo(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_long_duc = SaoLongDuc.an_sao(birthdate, cur_year, gender)
         vi_tri_bach_ho = vi_tri_long_duc % 12 + 1
 
@@ -2273,7 +2274,7 @@ class SaoThaiPhu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         vi_tri_thai_phu = (6 + zodiac_hour_tuple[1] - 1) % 12 + 1
         return vi_tri_thai_phu
@@ -2291,7 +2292,7 @@ class SaoTamThai(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_ta_phu = SaoTaPhu.an_sao(birthdate, cur_year, gender)
         vi_tri_tam_thai = (vi_tri_ta_phu - 1 + lunar_date.day - 1) % 12 + 1
@@ -2310,7 +2311,7 @@ class SaoBatToa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         vi_tri_huu_bat = SaoHuuBat.an_sao(birthdate, cur_year, gender)
         vi_tri_bat_toa = (vi_tri_huu_bat - 1 - (lunar_date.day - 1) + 12 * 12) % 12 + 1
@@ -2329,7 +2330,7 @@ class SaoThanhLong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2352,7 +2353,7 @@ class SaoLongDuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_tue_pha = SaoTuePha.an_sao(birthdate, cur_year, gender)
         return vi_tri_tue_pha % 12 + 1
 
@@ -2369,7 +2370,7 @@ class SaoThienThuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return TuViUtil.tim_cung_no_boc(birthdate)
 
 
@@ -2385,7 +2386,7 @@ class SaoLucSi(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2408,7 +2409,7 @@ class SaoKinhDuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_loc_ton = SaoLocTon.an_sao(birthdate, cur_year, gender)
         vi_tri_kinh_duong = vi_tri_loc_ton % 12 + 1
 
@@ -2434,7 +2435,7 @@ class SaoTuePha(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_tu_phu = SaoTuPhu.an_sao(birthdate, cur_year, gender)
         return vi_tri_tu_phu % 12 + 1
 
@@ -2451,7 +2452,7 @@ class SaoThienHu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_thien_hu = SaoTuePha.an_sao(birthdate, cur_year, gender)
         if vi_tri_thien_hu in [1, 3, 7, 9]:
             SaoThienHu.trang_thai = TrangThai.DAC
@@ -2475,7 +2476,7 @@ class SaoThienKhoc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         vi_tri_thien_khoc = (6 - (chi_nam - 1) + 12) % 12 + 1
@@ -2502,7 +2503,7 @@ class SauDauQuan(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
         chi_gio = ZodiacUtil.zodiac_hour_tuple(birthdate)[1]
@@ -2521,7 +2522,7 @@ class SaoVanKhuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         zodiac_hour_tuple = ZodiacUtil.zodiac_hour_tuple(birthdate)
         vi_tri_van_khuc = (4 + zodiac_hour_tuple[1] - 1) % 12 + 1
         
@@ -2547,7 +2548,7 @@ class SaoLocTon(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -2589,7 +2590,7 @@ class SaoBacSy(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return SaoLocTon.an_sao(birthdate, cur_year, gender)
 
 
@@ -2605,7 +2606,7 @@ class SaoNguyetDuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         return SaoTuPhu.an_sao(birthdate, cur_year, gender)
 
 
@@ -2621,7 +2622,7 @@ class SaoLuuHa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -2653,7 +2654,7 @@ class SaoTuPhu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_quan_phuf = SaoQuanPhuf.an_sao(birthdate, cur_year, gender)
         return vi_tri_quan_phuf % 12 + 1
 
@@ -2670,7 +2671,7 @@ class SaoKiepSat(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[1]
 
@@ -2704,7 +2705,7 @@ class SaoTruongSinh(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         cuc = TuViUtil.tim_cuc(birthdate)
         temp_dict = {
             'Thuỷ nhị cục': 9,
@@ -2729,7 +2730,7 @@ class SaoMocDuc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2751,7 +2752,7 @@ class SaoQuanDoi(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2773,7 +2774,7 @@ class SaoLamQuan(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2795,7 +2796,7 @@ class SaoDeVuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2817,7 +2818,7 @@ class SaoSuy(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2839,7 +2840,7 @@ class SaoBenh(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2861,7 +2862,7 @@ class SaoTu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2883,7 +2884,7 @@ class SaoMo(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2905,7 +2906,7 @@ class SaoTuyet(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2927,7 +2928,7 @@ class SaoThai(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2949,7 +2950,7 @@ class SaoDuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         am_duong = TuViUtil.tim_am_duong(birthdate, gender)
         if am_duong in ['Dương Nam', 'Âm Nữ']:
             d = 1
@@ -2971,7 +2972,7 @@ class SaoTuan(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam, chi_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)
         vi_tri_tuan_sau_2_cung = (chi_nam - 1 - (can_nam - 1) + 12) % 12 + 1
@@ -2991,7 +2992,7 @@ class SaoTriet(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         lunar_date = DateUtil.solar_to_lunar(birthdate.empty_hms())
         can_nam = ZodiacUtil.zodiac_year_tuple(lunar_date)[0]
 
@@ -3023,7 +3024,7 @@ class SaoLuuThienMa(Sao):
     
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         chi_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
         temp_dict = {
             1: 3,
@@ -3055,7 +3056,7 @@ class SaoLuuTangMon(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         chi_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
         return (2 + (chi_nam_xem - 1)) % 12 + 1
 
@@ -3072,7 +3073,7 @@ class SaoLuuThienHu(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         chi_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
         return (6 + (chi_nam_xem - 1)) % 12 + 1
 
@@ -3089,7 +3090,7 @@ class SaoLuuThaiTue(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         chi_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
         return chi_nam_xem
 
@@ -3106,7 +3107,7 @@ class SaoLuuThienKhoc(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         chi_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
         return (6 - (chi_nam_xem - 1) + 12) % 12 + 1
 
@@ -3123,7 +3124,7 @@ class SaoLuuKinhDuong(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_luu_loc_ton = SaoLuuLocTon.an_sao(birthdate, cur_year, gender)
         return vi_tri_luu_loc_ton % 12 + 1
 
@@ -3140,7 +3141,7 @@ class SaoLuuLocTon(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         can_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
         temp_dict = {
             1: 3,
@@ -3170,7 +3171,7 @@ class SaoLuuBachHo(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         chi_nam_xem = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
         return (8 + (chi_nam_xem - 1)) % 12 + 1
 
@@ -3187,7 +3188,246 @@ class SaoLuuDaLa(Sao):
 
     @staticmethod
     @lru_cache
-    def an_sao(birthdate: SolarDate, cur_year: int = 2023, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
         vi_tri_luu_loc_ton = SaoLuuLocTon.an_sao(birthdate, cur_year, gender)
         return (vi_tri_luu_loc_ton - 2 + 12) % 12 + 1
     
+
+class SaoLuuDaoHoa(Sao):
+    name = 'L. Đào Hoa'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.MOC
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2020
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        chi_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
+
+        temp_dict = {
+            1: 10,
+            2: 7,
+            3: 4,
+            4: 1,
+            5: 10,
+            6: 7,
+            7: 4,
+            8: 1,
+            9: 10,
+            10: 7,
+            11: 4,
+            12: 1
+        }
+
+        return temp_dict.get(chi_nam)
+    
+
+class SaoLuuHongLoan(Sao):
+    name = 'L. Hồng Loan'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.THUY
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2020.1
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        chi_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[1]
+        return (3 - (chi_nam - 1) + 12) % 12 + 1
+
+
+class SaoLuuThienKhoi(Sao):
+    name = 'L. Thiên Khôi'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.HOA
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2024.5
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        can_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
+
+        temp_dict = {
+            1: 2,
+            2: 1,
+            3: 12,
+            4: 12,
+            5: 2,
+            6: 1,
+            7: 7,
+            8: 7,
+            9: 4,
+            10: 4
+        }
+
+        return temp_dict.get(can_nam)
+
+
+class SaoLuuThienViet(Sao):
+    name = 'L. Thiên Việt'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.HOA
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2024.5
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        can_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
+
+        temp_dict = {
+            1: 8,
+            2: 9,
+            3: 10,
+            4: 10,
+            5: 8,
+            6: 9,
+            7: 3,
+            8: 3,
+            9: 6,
+            10: 6
+        }
+
+        return temp_dict.get(can_nam)
+
+
+class SaoLuuHoaLoc(Sao):
+    name = 'L. Hoá Lộc'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.MOC
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2030
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        can_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
+
+        temp_dict = {
+            1: SaoLiemTrinh.an_sao(birthdate, cur_year, gender),
+            2: SaoThienCo.an_sao(birthdate, cur_year, gender),
+            3: SaoThienDong.an_sao(birthdate, cur_year, gender),
+            4: SaoThaiAm.an_sao(birthdate, cur_year, gender),
+            5: SaoThamLang.an_sao(birthdate, cur_year, gender),
+            6: SaoVuKhuc.an_sao(birthdate, cur_year, gender),
+            7: SaoThaiDuong.an_sao(birthdate, cur_year, gender),
+            8: SaoCuMon.an_sao(birthdate, cur_year, gender),
+            9: SaoThienLuong.an_sao(birthdate, cur_year, gender),
+            10: SaoPhaQuan.an_sao(birthdate, cur_year, gender)
+        }
+
+        vi_tri_luu_hoa_loc = temp_dict.get(can_nam)
+        return vi_tri_luu_hoa_loc
+
+
+class SaoLuuHoaQuyen(Sao):
+    name = 'L. Hoá Quyền'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.MOC
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2030.1
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        can_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
+
+        temp_dict = {
+            1: SaoPhaQuan.an_sao(birthdate, cur_year, gender),
+            2: SaoThienLuong.an_sao(birthdate, cur_year, gender),
+            3: SaoThienCo.an_sao(birthdate, cur_year, gender),
+            4: SaoThienDong.an_sao(birthdate, cur_year, gender),
+            5: SaoThaiAm.an_sao(birthdate, cur_year, gender),
+            6: SaoThamLang.an_sao(birthdate, cur_year, gender),
+            7: SaoVuKhuc.an_sao(birthdate, cur_year, gender),
+            8: SaoThaiDuong.an_sao(birthdate, cur_year, gender),
+            9: SaoTuVi.an_sao(birthdate, cur_year, gender),
+            10: SaoCuMon.an_sao(birthdate, cur_year, gender)
+        }
+
+        vi_tri_luu_hoa_quyen = temp_dict.get(can_nam)
+        return vi_tri_luu_hoa_quyen
+
+
+class SaoLuuHoaKhoa(Sao):
+    name = 'L. Hoá Khoa'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.MOC
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_TRAI
+    order = 2030.2
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        can_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
+
+        temp_dict = {
+            1: SaoVuKhuc.an_sao(birthdate, cur_year, gender),
+            2: SaoTuVi.an_sao(birthdate, cur_year, gender),
+            3: SaoVanXuong.an_sao(birthdate, cur_year, gender),
+            4: SaoThienCo.an_sao(birthdate, cur_year, gender),
+            5: SaoHuuBat.an_sao(birthdate, cur_year, gender),
+            6: SaoThienLuong.an_sao(birthdate, cur_year, gender),
+            7: SaoThaiAm.an_sao(birthdate, cur_year, gender),
+            8: SaoVanKhuc.an_sao(birthdate, cur_year, gender),
+            9: SaoTaPhu.an_sao(birthdate, cur_year, gender),
+            10: SaoThaiAm.an_sao(birthdate, cur_year, gender)
+        }
+
+        vi_tri_luu_hoa_khoa = temp_dict.get(can_nam)
+        return vi_tri_luu_hoa_khoa
+
+
+class SaoLuuHoaKy(Sao):
+    name = 'L. Hoá Kỵ'
+    am_duong = AmDuong.NONE
+    ngu_hanh = NguHanh.THUY
+    trang_thai = TrangThai.NONE
+    loai_sao = LoaiSao.PHU_TINH_PHAI
+    order = 2030.8
+    is_print_bold = False
+
+
+    @staticmethod
+    @lru_cache
+    def an_sao(birthdate: SolarDate, cur_year: int = datetime.now().year, gender: Union[int, None] = GioiTinh.NONE.value) -> int:
+        can_nam = ZodiacUtil.zodiac_year_tuple(Date(cur_year, 6, 1))[0]
+
+        temp_dict = {
+            1: SaoThaiDuong.an_sao(birthdate, cur_year, gender),
+            2: SaoThaiAm.an_sao(birthdate, cur_year, gender),
+            3: SaoLiemTrinh.an_sao(birthdate, cur_year, gender),
+            4: SaoCuMon.an_sao(birthdate, cur_year, gender),
+            5: SaoThienCo.an_sao(birthdate, cur_year, gender),
+            6: SaoVanKhuc.an_sao(birthdate, cur_year, gender),
+            7: SaoThienDong.an_sao(birthdate, cur_year, gender),
+            8: SaoVanXuong.an_sao(birthdate, cur_year, gender),
+            9: SaoVuKhuc.an_sao(birthdate, cur_year, gender),
+            10: SaoThamLang.an_sao(birthdate, cur_year, gender)
+        }
+
+        vi_tri_luu_hoa_ky = temp_dict.get(can_nam)
+        return vi_tri_luu_hoa_ky
